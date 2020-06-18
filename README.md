@@ -76,7 +76,8 @@ Add the JWT plugin to your Kong service:
 
 ```bash
 $ curl -X POST http://localhost:8001/services/my_service_1/plugins \
-    --data "name=jwt"
+    --data "name=jwt" \
+    --data "config.cookie_names=jwt"
 # Configure JWT authentication on your Kong route
 $ curl -X POST http://localhost:8001/routes/my-service-1/plugins \
     --data "name=jwt"
@@ -123,11 +124,19 @@ $ curl http://localhost:8000/my-service-1 \
     -H "Authorization: Bearer ${TOKEN}"
 ```
 
-If you have configured checking cookies with `config.cookie_names`:
+If you haven't configured cookie names when creating the plugin, run this (with your JWT plugin ID):
+
+```bash
+$ curl -X PATCH http://localhost:8001/services/my_service_1/plugins/5a85280c-d7d4-4fa8-ab75-9383d3731a0c --data "config.cookie_names=jwt"
+```
+
+Then this should work:
 
 ```bash
 $ curl --cookie jwt=${TOKEN} http://localhost:8000/my-service-1
 ```
+
+TODO: Why doesn't this work?
 
 ## Misc
 
