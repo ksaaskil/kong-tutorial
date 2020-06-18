@@ -70,24 +70,25 @@ $ curl -X PATCH http://localhost:8001/services/my_service_1/plugins/{PLUGIN_ID} 
  --data "enabled=false"
 ```
 
-### JWT
+### JWT authentication
+
+Add the JWT plugin to your Kong service:
 
 ```bash
-export KONG_SERVICE=my_service_1
-$ curl -X POST http://localhost:8001/services/${KONG_SERVICE}/plugins \
+$ curl -X POST http://localhost:8001/services/my_service_1/plugins \
     --data "name=jwt"
-# Configure on route:
+# Configure JWT authentication on your Kong route
 $ curl -X POST http://localhost:8001/routes/my-service-1/plugins \
     --data "name=jwt"
 ```
 
-Add a consumer:
+Create a consumer:
 
 ```bash
 $ curl -X POST -d "username=user123&custom_id=SOME_CUSTOM_ID" http://localhost:8001/consumers/
 ```
 
-Provision credential:
+Provision JWT credentials for the consumer:
 
 ```bash
 $ curl -X POST http://localhost:8001/consumers/user123/jwt -H "Content-Type: application/x-www-form-urlencoded"
@@ -95,13 +96,13 @@ $ curl -X POST http://localhost:8001/consumers/user123/jwt -H "Content-Type: app
 
 In my case, I got `"key": "dym9zREuneIvdDRWhrCyGXonCxEe35NP"` and `"secret": "DBy5j4nQmxmkTFvTcROuklzZkAccOZYw"`.
 
-List credentials:
+List all JWT credentials for a consumer:
 
 ```bash
 $ curl http://kong:8001/consumers/user123/jwt
 ```
 
-To craft JWT, the headers must be
+To craft a JWT, the headers are
 
 ```json
 {
@@ -111,7 +112,9 @@ To craft JWT, the headers must be
 }
 ```
 
-Create a token at [https://jwt.io](https://jwt.io) with the credential key in `iss` and the credential secret for signing.
+Replace the `iss` field here with your consumers credentials' key.
+
+Create a token at [https://jwt.io](https://jwt.io) with the consumer credential secret.
 
 Once you have a token, issue a request with `Authorization` header:
 
