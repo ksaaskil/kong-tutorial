@@ -49,3 +49,37 @@ $ curl -i -X POST http://localhost:8001/services/my_service_1/routes \
 ```
 
 Now navigate to [`http://localhost:8000/my-service-1`](http://localhost:8000/my-service-1) to see Nginx welcome page.
+
+Add API key authentication plugin:
+
+```bash
+$ curl -i -X POST \
+  --url http://localhost:8001/services/my_service_1/plugins/ \
+  --data 'name=key-auth'
+# Check authentication is working, you should get Unauthorized:
+$ curl -i http://localhost:8000/my-service-1
+```
+
+Now create consumers:
+
+```bash
+$ curl -i -X POST \
+  --url http://localhost:8001/consumers/ \
+  --data "username=Helen"
+# Give the user a key
+$ curl -i -X POST \
+  --url http://localhost:8001/consumers/Helen/key-auth/ \
+  --data 'key=SUPER_SECRET'
+# Make request with the key:
+$ curl -i http://localhost:8000/my-service-1 \
+  --header "apikey: SUPER_SECRET"
+```
+
+## Misc
+
+Run commands in running container:
+
+```bash
+# Check configuration is valid
+$ docker exec -it kong-tutorial-kong kong check /etc/kong/kong.conf
+```

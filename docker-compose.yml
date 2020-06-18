@@ -71,6 +71,8 @@ services:
       timeout: 10s
       retries: 10
     restart: on-failure
+    volumes:
+      - ./kong.conf:/etc/kong/kong.conf:ro
 
   db:
     image: postgres:9.5
