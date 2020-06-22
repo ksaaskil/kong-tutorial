@@ -3,7 +3,14 @@ _format_version: "1.1"
 services:
   - name: my-service
     url: http://my-service-1
+    plugins:
+      - name: key-auth
     routes:
       - name: my-route
         paths:
           - /
+
+consumers:
+  - username: my-user
+    keyauth_credentials:
+      - key: my-api-key
