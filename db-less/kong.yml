@@ -1,0 +1,9 @@
+_format_version: "1.1"
+
+services:
+  - name: my-service
+    url: http://my-service-1
+    routes:
+      - name: my-route
+        paths:
+          - /
